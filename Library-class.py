@@ -17,7 +17,5 @@ class Library:
         
 # test phase
 
-library = Library(5)
 
-print library
         
