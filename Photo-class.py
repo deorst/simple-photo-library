@@ -28,7 +28,10 @@ class Photo:
         
     def get_uid(self, uid):             
         """ get uid from the 'Library.generate_uid()' """
-        self.uid = uid                                
+        self.uid = uid   
+        
+    def get_directory(self, directory):
+        pass                             
         
 # test phase
 
