@@ -26,9 +26,19 @@ class Photo:
         s += 'name:\t' + self.name
         return s
         
+    def get_uid(self, uid):             
+        """ get uid from the 'Library.generate_uid()' """
+        self.uid = uid                                
+        
 # test phase
 
 photo = Photo('directory/test', 'IMG_TEST.JPG')
 
-print photo       
+print photo
+
+photo.get_uid(1)
+
+print photo
+
+     
         
