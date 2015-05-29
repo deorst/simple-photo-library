@@ -5,31 +5,45 @@
 # one by one with Photo.get_uid() method), ...
 
 import os           # for the Library.read_all() method (os.walk() used there)
-import Photo as photo
+from Photo import Photo
 
 class Library:
-    def __init__(self, current_uid = 0):
-        self.current_uid = current_uid
+    def __init__(self, source_path):
+        self.src_path = source_path
+        self.database = None
         
     def __str__(self):
-        s = 'current uid:\t' + str(self.current_uid)
-        return s
+        out = 'uid:\tdate/time:\tdirectory:\tname:\n'
+        if self.database:
+		    for dummy_item in self.database.values():
+			    out += str(dummy_item) + '\n'
+        return out
         
     def generate_uid(self):
         """ generate uid for the 'Photo.get_uid()' """
         return self.current_uid
         
-    def read_all(self, source_path):
+    def read_all(self):
         """ read all files in a given directory 'source_path' """
-        data = [['dirpath', 'dirname', 'filename']]
-        for dirpath, dirname, filename in os.walk(source_path):
-            data.append([str(dirpath), str(dirname), str(filename)])
-        return data
+        uid = '00000'                                                    # need to make in '00000'
+        self.database = {}
+        for dummy_dirpath, dummy_dirname, dummy_filename in os.walk(self.src_path):
+            if dummy_filename:
+                for dummy_name in dummy_filename:
+                    self.database[uid] = Photo(dummy_dirpath, dummy_name)
+                    self.database[uid].get_uid(uid)
+                    uid = int(uid)
+                    uid += 1
+                    uid = str(uid)
+                    while len(uid) < 5:
+                        uid = '0' + uid
+        return self.database
+        
                 
 # test phase
 
-library = Library()
+library = Library('/Users/dstadnik/Pictures/iPhoto Library.migratedphotolibrary/Masters')
+library.read_all()
 
-for dummy_item in library.read_all('/Users/dstadnik/Pictures/iPhoto Library.migratedphotolibrary/Masters'):
-    print dummy_item
+print library
         

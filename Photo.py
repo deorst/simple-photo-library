@@ -14,18 +14,20 @@ class Photo:
         self.uid = None                 # later (with method of Photo class). So they're 'None' for now.
         
     def __str__(self):
-        s = 'uid:\t'
+    
+        s = ''
         if self.uid:
-            s += str(self.uid) + ',\t'
+            s += str(self.uid) + '\t'
         else:
-            s += 'NO UID,\t'
-        s += 'date/time:\t'
+            s += 'NO UID\t'
+            
         if self.datetime:
-            s += str(self.datetime) + ',\t'
+            s += str(self.datetime) + '\t'
         else:
-            s += 'NO DATE/TIME,\t'
-        s += 'directory:\t' + self.directory
-        s += 'name:\t' + self.name
+            s += 'NO DATE/TIME\t'
+            
+        s +=  str(self.directory) + '/\t'
+        s += str(self.name) + '\t'
         return s
         
     def get_uid(self, uid):             
@@ -35,15 +37,6 @@ class Photo:
     def get_directory(self, directory):
         pass                             
         
-# test phase
-
-photo = Photo('directory/test', 'IMG_TEST.JPG')
-
-print photo
-
-photo.get_uid(1)
-
-print photo
 
      
         
