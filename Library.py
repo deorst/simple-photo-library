@@ -6,9 +6,11 @@
 
 import os           # for the Library.read_all() method (os.walk() used there)
 from Photo import Photo
+import shutil
 
 class Library:
-    def __init__(self, source_path):
+    def __init__(self, source_path, destination_path):
+        self.dst_path = destination_path
         self.src_path = source_path
         self.database = None
         
@@ -40,11 +42,27 @@ class Library:
                         uid = '0' + uid
         return self.database
         
+    def make_new_dir(self):
+        if 'albums' not in os.listdir(self.dst_path):
+            os.mkdir(self.dst_path + 'albums/')
+        for dummy_photo in self.database.values():
+            if dummy_photo.get_datetime()[:4] not in os.listdir(self.dst_path + 'albums/'):
+                os.mkdir(self.dst_path + 'albums/' + dummy_photo.get_datetime()[:4])
+            if dummy_photo.get_datetime()[5:7] not in os.listdir(self.dst_path + 'albums/' + dummy_photo.get_datetime()[:4]):
+                os.mkdir(self.dst_path + 'albums/' + dummy_photo.get_datetime()[:4] + '/' + dummy_photo.get_datetime()[5:7])
+            if dummy_photo.get_datetime()[8:10] not in os.listdir(self.dst_path + 'albums/' + dummy_photo.get_datetime()[:4] + '/' + dummy_photo.get_datetime()[5:7]):
+                os.mkdir(self.dst_path + 'albums/' + dummy_photo.get_datetime()[:4] + '/' + dummy_photo.get_datetime()[5:7] + '/' + dummy_photo.get_datetime()[8:10])
+            
+    def copy_src_to_dst(self):
+        for dummy_photo in self.database.values():
+            shutil.copyfile(dummy_photo.get_directory() + '/' + dummy_photo.get_name(), self.dst_path + 'albums/' + dummy_photo.get_datetime()[:4] + '/' + dummy_photo.get_datetime()[5:7] + '/' + dummy_photo.get_datetime()[8:10] + '/' + dummy_photo.get_name())
+        
+                             
+        
+    
+        
                 
 # test phase
 
-library = Library('/Users/dstadnik/Pictures/iPhoto Library.migratedphotolibrary/Masters')
-library.read_all()
 
-print library
         

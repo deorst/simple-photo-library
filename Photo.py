@@ -38,5 +38,14 @@ class Photo:
                 
     def set_datetime(self):
         self.datetime = time.strftime('%Y:%m:%d %H:%M:%S', time.gmtime(os.path.getmtime(self.directory + '/' + self.name)))
+        
+    def get_datetime(self):
+        return self.datetime
+        
+    def get_name(self):
+        return self.name
+        
+    def get_directory(self):
+        return self.directory
      
         
