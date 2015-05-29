@@ -13,7 +13,7 @@ class Library:
         self.database = None
         
     def __str__(self):
-        out = 'uid:\tdate/time:\tdirectory:\tname:\n'
+        out = 'uid:\tdate/time(modified):\tdirectory:\tname:\n'
         if self.database:
 		    for dummy_item in self.database.values():
 			    out += str(dummy_item) + '\n'
@@ -31,7 +31,8 @@ class Library:
             if dummy_filename:
                 for dummy_name in dummy_filename:
                     self.database[uid] = Photo(dummy_dirpath, dummy_name)
-                    self.database[uid].get_uid(uid)
+                    self.database[uid].set_uid(uid)
+                    self.database[uid].set_datetime()
                     uid = int(uid)
                     uid += 1
                     uid = str(uid)

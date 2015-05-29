@@ -5,6 +5,8 @@
 # uid will be randomly generated, name, path will be original.
 # datetime will be extracted from MODIFIED date and time data.
 
+import os
+import time
 
 class Photo:
     def __init__(self, directory, name):
@@ -30,13 +32,11 @@ class Photo:
         s += str(self.name) + '\t'
         return s
         
-    def get_uid(self, uid):             
+    def set_uid(self, uid):             
         """ get uid from the 'Library.generate_uid()' """
         self.uid = uid   
-        
-    def get_directory(self, directory):
-        pass                             
-        
-
+                
+    def set_datetime(self):
+        self.datetime = time.strftime('%Y:%m:%d %H:%M:%S', time.gmtime(os.path.getmtime(self.directory + '/' + self.name)))
      
         
