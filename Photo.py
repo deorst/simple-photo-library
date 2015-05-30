@@ -1,43 +1,36 @@
-""" Photo class """
-# The objective of that file is to create a Photo class.
-# An instance of the Photo should have the properties listed below:
-# An uid(not name), name, path, datetime.
-# uid will be randomly generated, name, path will be original.
-# datetime will be extracted from MODIFIED date and time data.
+""" class Photo """
 
-import os
-import time
+from os.path import getmtime
+from time import strftime, gmtime
 
 class Photo:
-    def __init__(self, directory, name):
+    def __init__(self, directory, name, uid):
         self.directory = directory
         self.name = name
-        self.datetime = None            # an instance of Photo will get datetime and uid
-        self.uid = None                 # later (with method of Photo class). So they're 'None' for now.
+        self.uid = uid
+        self.datetime = None                    # an instance of Photo will get datetime and uid
+                                 
         
     def __str__(self):
-    
-        s = ''
+        out = ''
         if self.uid:
-            s += str(self.uid) + '\t'
+            out += str(self.uid) + '\t'
         else:
-            s += 'NO UID\t'
+            out += 'NO UID\t'
             
         if self.datetime:
-            s += str(self.datetime) + '\t'
+            out += str(self.datetime) + '\t'
         else:
-            s += 'NO DATE/TIME\t'
+            out += 'NO DATE/TIME\t'
             
-        s +=  str(self.directory) + '/\t'
-        s += str(self.name) + '\t'
-        return s
-        
-    def set_uid(self, uid):             
-        """ get uid from the 'Library.generate_uid()' """
-        self.uid = uid   
+        out +=  str(self.directory) + '/\t'     # tailing '/'
+        out += str(self.name)
+        return out  
                 
     def get_datetime_from_file(self):
-        self.datetime = time.strftime('%Y:%m:%d %H:%M:%S', time.gmtime(os.path.getmtime(self.directory + '/' + self.name)))
+        """ get MODIFIED date and time """
+        self.datetime = strftime('%Y:%m:%d %H:%M:%S', gmtime(getmtime(self.directory + '/' + self.name)))
+        return self.datetime
         
     def get_datetime(self):
         return self.datetime
@@ -47,5 +40,4 @@ class Photo:
         
     def get_directory(self):
         return self.directory
-     
         
