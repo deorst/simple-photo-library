@@ -36,7 +36,7 @@ class Photo:
         """ get uid from the 'Library.generate_uid()' """
         self.uid = uid   
                 
-    def set_datetime(self):
+    def get_datetime_from_file(self):
         self.datetime = time.strftime('%Y:%m:%d %H:%M:%S', time.gmtime(os.path.getmtime(self.directory + '/' + self.name)))
         
     def get_datetime(self):
