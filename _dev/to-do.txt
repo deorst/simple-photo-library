@@ -1,1 +1,6 @@
-to do list
+to do:
+
+1. Framework;
+2. Add some tests;
+3. Progress bar;
+
