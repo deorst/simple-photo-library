@@ -1,4 +1,6 @@
-""" class Photo """
+"""
+Utility class for working with each individual Photo 
+"""
 
 from os.path import getmtime
 from time import strftime, gmtime

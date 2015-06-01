@@ -1,17 +1,23 @@
 """ class Library """
 
-from os import listdir, mkdir, walk                                                         # for the Library.read_all() and Library.make_new_dir() methods 
-from Photo import Photo                                                                     # class Photo
-from shutil import copyfile                                                                 # for Library.copy_src_to_dst() method
+# for the Library.read_all() and Library.make_new_dir() methods 
+from os import listdir, mkdir, walk                                                         
+from Photo import Photo                                                                     
+from shutil import copyfile                                                                 
 
 class Library:
     def __init__(self, source_path, destination_path):
         self.dst_path = destination_path
         self.src_path = source_path
-        self.database = None                                                                # will be assigned later in the Library.read_all() method
+
+        # will be assigned later in the Library.read_all() method
+        self.database = None                                                                
         
     def __str__(self):
-        out = 'uid:\tdate/time(modified):\tdirectory:\tname:\n'                             # header
+        """Return a string containing a nicely printable representation of an object"""
+
+        # header
+        out = 'uid:\tdate/time(modified):\tdirectory:\tname:\n'                             
         if self.database:                     
 		    for dummy_item in self.database.values():
 			    out += str(dummy_item) + '\n'
@@ -21,8 +27,11 @@ class Library:
         """ read all files in a given directory 'source_path' and returns a dictionary database {str(uid): (instance of Library)}"""
         uid = '00000'                                                                       # maximum amount of photos 99999
         self.database = {}
+
+        # traverse directory structure 
         for dummy_dirpath, dummy_dirname, dummy_filename in walk(self.src_path):
-            if dummy_filename:                                                              # dummy_filename - is a list of names of files in a directory dummy_dirname.
+            # dummy_filename - is a list of names of files in a directory dummy_dirname.
+            if dummy_filename:                                                              
                 for dummy_name in dummy_filename:
                     self.database[uid] = Photo(dummy_dirpath, dummy_name, uid)
                     self.database[uid].get_datetime_from_file()
