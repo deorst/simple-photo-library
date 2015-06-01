@@ -40,7 +40,7 @@ class Library:
                     uid = str(uid)
                     while len(uid) < 5:
                         uid = '0' + uid
-        return self.database
+#        return self.database       there is no need in return as self.database will be used only inside of the instance of Library
         
     def make_new_dir(self):
         """ creates new directories ordered photos in a dst_dir """
