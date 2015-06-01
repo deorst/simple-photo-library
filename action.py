@@ -5,13 +5,18 @@ Main script control the flow of the execution of whole program
 
 from Photo import Photo
 from Library import Library
+from sys import exit
 
 # for testing purposes
 from timeit import default_timer
 
 # get source and destination folder from user
-src_dir = raw_input('Please type in source directory: ')
-dst_dir = raw_input('Please type in destination directory: ')
+try:
+  src_dir = raw_input('Please type in source directory: ')
+  dst_dir = raw_input('Please type in destination directory: ')
+except EOFError:
+  print ""
+  exit(0)
 
 # used for logging purposes
 start = default_timer()    
