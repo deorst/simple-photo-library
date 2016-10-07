@@ -28,7 +28,7 @@ class Library(object):
         Read all files in a given directory 'source_path',
         and returns a dictionary 'libraryset' {str(uid): Library.object}
         """
-        uid = '00000'                                                                       # maximum amount of photos 99999
+        uid = 0
         self.libraryset = {}
 
         # traverse directory structure 
@@ -38,11 +38,7 @@ class Library(object):
                 for dummy_name in dummy_filename:
                     self.libraryset[uid] = Photo(dummy_dirpath, dummy_name, uid)
                     self.libraryset[uid].get_datetime_from_file()
-                    uid = int(uid)
                     uid += 1
-                    uid = str(uid)
-                    while len(uid) < 5:
-                        uid = '0' + uid
 
     def make_new_dir(self):
         """
@@ -71,4 +67,11 @@ class Library(object):
         """ copy all photos from src_dir to dst_dir """
         # copy all photos to dst_dir/albums/YYYY/MM/DD based on file's modified date
         for dummy_photo in self.libraryset.values():
-            copyfile(dummy_photo.get_directory() + '/' + dummy_photo.get_name(), self.dst_path + '/' + 'albums/' + dummy_photo.get_datetime()[:4] + '/' + dummy_photo.get_datetime()[5:7] + '/' + dummy_photo.get_datetime()[8:10] + '/' + dummy_photo.get_name())
+            copyfile(
+                dummy_photo.get_directory() + '/' + dummy_photo.get_name(),
+                self.dst_path + '/' + 'albums/' +
+                dummy_photo.get_datetime()[:4] + '/' +
+                dummy_photo.get_datetime()[5:7] + '/' +
+                dummy_photo.get_datetime()[8:10] + '/' +
+                dummy_photo.get_name()
+            )
