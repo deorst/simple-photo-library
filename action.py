@@ -2,7 +2,6 @@
 Main script control the flow of the execution of whole program
 """
 
-
 from Photo import Photo
 from Library import Library
 from sys import exit

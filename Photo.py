@@ -5,14 +5,15 @@ Utility class for working with each individual Photo
 from os.path import getmtime
 from time import strftime, gmtime
 
-class Photo:
+
+class Photo(object):
+
     def __init__(self, directory, name, uid):
         self.directory = directory
         self.name = name
         self.uid = uid
         self.datetime = None                    # an instance of Photo will get datetime and uid
-                                 
-        
+
     def __str__(self):
         out = ''
         if self.uid:
@@ -42,4 +43,3 @@ class Photo:
         
     def get_directory(self):
         return self.directory
-        
