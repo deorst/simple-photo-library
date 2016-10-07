@@ -51,27 +51,36 @@ class Library(object):
             mkdir(self.dst_path + '/' + 'albums/')
             
         for dummy_photo in self.libraryset.values():
-            # create a 'dst_dir/albums/YYYY' folder
-            if dummy_photo.get_datetime()[:4] not in listdir(self.dst_path + '/' + 'albums/'):
-                mkdir(self.dst_path + '/' + 'albums/' + dummy_photo.get_datetime()[:4])
+            year = dummy_photo.get_datetime()[:4]
+            month = dummy_photo.get_datetime()[5:7]
+            day = dummy_photo.get_datetime()[8:10]
+
+            if year not in listdir('{path}/albums/'.format(path=self.dst_path)):
+                mkdir('{path}/albums/{year}'.format(path=self.dst_path, year=year))
                 
-            # create a 'dst_dir/albums/YYYY/MM' folder
-            if dummy_photo.get_datetime()[5:7] not in listdir(self.dst_path + '/' + 'albums/' + dummy_photo.get_datetime()[:4]):
-                mkdir(self.dst_path + '/' + 'albums/' + dummy_photo.get_datetime()[:4] + '/' + dummy_photo.get_datetime()[5:7])
+            if month not in listdir('{path}/albums/{year}'.format(path=self.dst_path, year=year)):
+                mkdir('{path}/albums/{year}/{month}'.format(path=self.dst_path, year=year, month=month))
             
-            # create a 'dst_dir/albums/YYYY/MM/DD' folder
-            if dummy_photo.get_datetime()[8:10] not in listdir(self.dst_path + '/' + 'albums/' + dummy_photo.get_datetime()[:4] + '/' + dummy_photo.get_datetime()[5:7]):
-                mkdir(self.dst_path + '/' + 'albums/' + dummy_photo.get_datetime()[:4] + '/' + dummy_photo.get_datetime()[5:7] + '/' + dummy_photo.get_datetime()[8:10])
+            if day not in listdir('{path}/albums/{year}/{month}'.format(path=self.dst_path, year=year, month=month)):
+                mkdir('{path}/albums/{year}/{month}/{day}'.format(path=self.dst_path, year=year, month=month))
             
     def copy_src_to_dst(self):
         """ copy all photos from src_dir to dst_dir """
         # copy all photos to dst_dir/albums/YYYY/MM/DD based on file's modified date
         for dummy_photo in self.libraryset.values():
+            year = dummy_photo.get_datetime()[:4]
+            month = dummy_photo.get_datetime()[5:7]
+            day = dummy_photo.get_datetime()[8:10]
+            name = dummy_photo.get_name()
+            old_dir = dummy_photo.get_directory()
+            new_dir = self.dst_path
             copyfile(
-                dummy_photo.get_directory() + '/' + dummy_photo.get_name(),
-                self.dst_path + '/' + 'albums/' +
-                dummy_photo.get_datetime()[:4] + '/' +
-                dummy_photo.get_datetime()[5:7] + '/' +
-                dummy_photo.get_datetime()[8:10] + '/' +
-                dummy_photo.get_name()
+                '{old_dir}/{name}'.format(old_dir=old_dir, name=name),
+                '{new_dir}/albums/{year}/{month}/{day}/{name}'.format(
+                    new_dir=new_dir,
+                    year=year,
+                    month=month,
+                    day=day,
+                    name=name,
+                )
             )
