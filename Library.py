@@ -79,7 +79,7 @@ class Library(object):
     def copy_src_to_dst(self):
         """ copy all photos from src_dir to dst_dir """
         # copy all photos to dst_dir/albums/YYYY/MM/DD based on file's modified date
-        for dummy_photo in self.libraryset.values():
+        for number, dummy_photo in enumerate(self.libraryset.values()):
             year = dummy_photo.get_datetime()[:4]
             month = dummy_photo.get_datetime()[5:7]
             day = dummy_photo.get_datetime()[8:10]
@@ -102,6 +102,12 @@ class Library(object):
                         year=year,
                         month=month,
                         day=day,
-                        name=name,
+                        name='{year}-{month}-{day}_{number}{ext}'.format(
+                            year=year,
+                            month=month,
+                            day=day,
+                            number=number,
+                            ext=splitext(name)[1]
+                        ),
                     )
                 )

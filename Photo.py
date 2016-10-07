@@ -27,7 +27,7 @@ class Photo(object):
         else:
             out += 'NO DATE/TIME\t'
             
-        out +=  str(self.directory) + '/\t'     # tailing '/'
+        out += str(self.directory) + '/\t'
         out += str(self.name)
         return out  
                 
