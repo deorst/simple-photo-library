@@ -1,7 +1,8 @@
 """ class Library """
 
 # for the Library.read_all() and Library.make_new_dir() methods 
-from os import listdir, mkdir, walk                                                         
+from os import listdir, mkdir, walk
+from os.path import splitext
 from Photo import Photo                                                                     
 from shutil import copyfile                                                                 
 
@@ -38,6 +39,12 @@ class Library(object):
                 for dummy_name in dummy_filename:
                     self.libraryset[uid] = Photo(dummy_dirpath, dummy_name, uid)
                     self.libraryset[uid].get_datetime_from_file()
+
+                    ext = splitext(dummy_name)[1]
+                    if ext not in ['.jpg', '.jpeg', '.JPG', '.JPEG',
+                                   '.png', '.PNG', '.gif', '.GIF',
+                                   '.m4v', '.MOV', '.mp4']:
+                        self.libraryset[uid].unrecognized = True
                     uid += 1
 
     def make_new_dir(self):
@@ -55,15 +62,20 @@ class Library(object):
             month = dummy_photo.get_datetime()[5:7]
             day = dummy_photo.get_datetime()[8:10]
 
-            if year not in listdir('{path}/albums/'.format(path=self.dst_path)):
-                mkdir('{path}/albums/{year}'.format(path=self.dst_path, year=year))
-                
-            if month not in listdir('{path}/albums/{year}'.format(path=self.dst_path, year=year)):
-                mkdir('{path}/albums/{year}/{month}'.format(path=self.dst_path, year=year, month=month))
-            
-            if day not in listdir('{path}/albums/{year}/{month}'.format(path=self.dst_path, year=year, month=month)):
-                mkdir('{path}/albums/{year}/{month}/{day}'.format(path=self.dst_path, year=year, month=month))
-            
+            if dummy_photo.unrecognized:
+                if 'unrecognized' not in listdir('{path}/'.format(path=self.dst_path)):
+                    mkdir('{path}/unrecognized'.format(path=self.dst_path))
+
+            else:
+                if year not in listdir('{path}/albums/'.format(path=self.dst_path)):
+                    mkdir('{path}/albums/{year}'.format(path=self.dst_path, year=year))
+
+                if month not in listdir('{path}/albums/{year}'.format(path=self.dst_path, year=year)):
+                    mkdir('{path}/albums/{year}/{month}'.format(path=self.dst_path, year=year, month=month))
+
+                if day not in listdir('{path}/albums/{year}/{month}'.format(path=self.dst_path, year=year, month=month)):
+                    mkdir('{path}/albums/{year}/{month}/{day}'.format(path=self.dst_path, year=year, month=month, day=day))
+
     def copy_src_to_dst(self):
         """ copy all photos from src_dir to dst_dir """
         # copy all photos to dst_dir/albums/YYYY/MM/DD based on file's modified date
@@ -74,13 +86,22 @@ class Library(object):
             name = dummy_photo.get_name()
             old_dir = dummy_photo.get_directory()
             new_dir = self.dst_path
-            copyfile(
-                '{old_dir}/{name}'.format(old_dir=old_dir, name=name),
-                '{new_dir}/albums/{year}/{month}/{day}/{name}'.format(
-                    new_dir=new_dir,
-                    year=year,
-                    month=month,
-                    day=day,
-                    name=name,
+            if dummy_photo.unrecognized:
+                copyfile(
+                    '{old_dir}/{name}'.format(old_dir=old_dir, name=name),
+                    '{new_dir}/unrecognized/{name}'.format(
+                        new_dir=new_dir,
+                        name=name
+                    )
                 )
-            )
+            else:
+                copyfile(
+                    '{old_dir}/{name}'.format(old_dir=old_dir, name=name),
+                    '{new_dir}/albums/{year}/{month}/{day}/{name}'.format(
+                        new_dir=new_dir,
+                        year=year,
+                        month=month,
+                        day=day,
+                        name=name,
+                    )
+                )

@@ -12,7 +12,8 @@ class Photo(object):
         self.directory = directory
         self.name = name
         self.uid = uid
-        self.datetime = None                    # an instance of Photo will get datetime and uid
+        self.unrecognized = False
+        self.datetime = None
 
     def __str__(self):
         out = ''
