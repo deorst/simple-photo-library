@@ -9,4 +9,7 @@ setup(name='simpholib',
       license='MIT',
       packages=['simpholib'],
       zip_safe=False,
-      )
+      entry_points={
+          'console_scripts': ['simpho=simpholib.command_line:main'],
+      }
+    )

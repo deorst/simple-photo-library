@@ -1,10 +1,11 @@
 """ class Library """
 
 # for the Library.read_all() and Library.make_new_dir() methods 
-from os import listdir, mkdir, walk
 from os.path import splitext
 from Photo import Photo                                                                     
-from shutil import copyfile                                                                 
+from shutil import copyfile, rmtree
+
+import os
 
 
 class Library(object):
@@ -13,6 +14,10 @@ class Library(object):
         self.src_path = source_path
         self.dst_path = destination_path
         self.libraryset = libraryset
+        if self.src_path == self.dst_path:
+            self.delete_old = True
+        else:
+            self.delete_old = False
         
     def __str__(self):
         """Return a string containing a nicely printable representation of an object"""
@@ -33,7 +38,7 @@ class Library(object):
         self.libraryset = {}
 
         # traverse directory structure 
-        for dummy_dirpath, dummy_dirname, dummy_filename in walk(self.src_path):
+        for dummy_dirpath, dummy_dirname, dummy_filename in os.walk(self.src_path):
             # dummy_filename - is a list of names of files in a directory dummy_dirname.
             if dummy_filename:                                                              
                 for dummy_name in dummy_filename:
@@ -54,8 +59,8 @@ class Library(object):
         
         # create 'dst_dir/albums' folder just in case.
         # It's a root for a library.
-        if 'albums' not in listdir(self.dst_path):
-            mkdir(self.dst_path + '/' + 'albums/')
+        if 'albums' not in os.listdir(self.dst_path):
+            os.mkdir(self.dst_path + '/' + 'albums/')
             
         for dummy_photo in self.libraryset.values():
             year = dummy_photo.get_datetime()[:4]
@@ -63,18 +68,18 @@ class Library(object):
             day = dummy_photo.get_datetime()[8:10]
 
             if dummy_photo.unrecognized:
-                if 'unrecognized' not in listdir('{path}/'.format(path=self.dst_path)):
-                    mkdir('{path}/unrecognized'.format(path=self.dst_path))
+                if 'unrecognized' not in os.listdir('{path}/'.format(path=self.dst_path)):
+                    os.mkdir('{path}/unrecognized'.format(path=self.dst_path))
 
             else:
-                if year not in listdir('{path}/albums/'.format(path=self.dst_path)):
-                    mkdir('{path}/albums/{year}'.format(path=self.dst_path, year=year))
+                if year not in os.listdir('{path}/albums/'.format(path=self.dst_path)):
+                    os.mkdir('{path}/albums/{year}'.format(path=self.dst_path, year=year))
 
-                if month not in listdir('{path}/albums/{year}'.format(path=self.dst_path, year=year)):
-                    mkdir('{path}/albums/{year}/{month}'.format(path=self.dst_path, year=year, month=month))
+                if month not in os.listdir('{path}/albums/{year}'.format(path=self.dst_path, year=year)):
+                    os.mkdir('{path}/albums/{year}/{month}'.format(path=self.dst_path, year=year, month=month))
 
-                if day not in listdir('{path}/albums/{year}/{month}'.format(path=self.dst_path, year=year, month=month)):
-                    mkdir('{path}/albums/{year}/{month}/{day}'.format(path=self.dst_path, year=year, month=month, day=day))
+                if day not in os.listdir('{path}/albums/{year}/{month}'.format(path=self.dst_path, year=year, month=month)):
+                    os.mkdir('{path}/albums/{year}/{month}/{day}'.format(path=self.dst_path, year=year, month=month, day=day))
 
     def copy_src_to_dst(self):
         """ copy all photos from src_dir to dst_dir """
@@ -111,3 +116,8 @@ class Library(object):
                         ),
                     )
                 )
+            if self.delete_old:
+                os.remove('{old_dir}/{name}'.format(old_dir=old_dir, name=name))
+
+        if self.delete_old and not os.listdir(old_dir):
+            rmtree(old_dir)
