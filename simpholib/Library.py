@@ -19,6 +19,7 @@ class Library(object):
             self.delete_old = True
         else:
             self.delete_old = False
+        self.folders_to_delete = []
         
     def __str__(self):
         """Return a string containing a nicely printable representation of an object"""
@@ -54,6 +55,10 @@ class Library(object):
                                    '.m4v', '.MOV', '.mp4']:
                         self.libraryset[uid].unrecognized = True
                     uid += 1
+
+            if not dummy_dirname:
+                self.folders_to_delete.append(dummy_dirpath)
+
         sys.stdout.flush()
         sys.stdout.write('\tDone!\n')
 
@@ -135,8 +140,12 @@ class Library(object):
 
             self.update_progress((number+1) / len_libraryset)
 
-        if self.delete_old and not os.listdir(old_dir):
-            rmtree(old_dir)
+        if self.delete_old:
+            self.folders_to_delete.append(old_dir)
+
+    def delete_old_folders(self):
+        for fol in self.folders_to_delete:
+            rmtree(fol)
 
     @staticmethod
     def update_progress(progress):

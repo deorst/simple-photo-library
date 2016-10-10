@@ -22,6 +22,8 @@ def main(src_dir, dst_dir=None):
     library.make_new_dir()
     library.copy_src_to_dst()
 
+    library.delete_old_folders()
+
     # used for logging purposes
     stop = default_timer()
 
