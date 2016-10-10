@@ -4,11 +4,7 @@
 Main script control the flow of the execution of whole program
 """
 
-from Photo import Photo
 from Library import Library
-from sys import exit
-
-# for testing purposes
 from timeit import default_timer
 
 
@@ -29,4 +25,4 @@ def main(src_dir, dst_dir=None):
     # used for logging purposes
     stop = default_timer()
 
-    print '\rExecution time: ', stop - start, ' sec'
+    print 'Execution time: ', stop - start, ' sec'

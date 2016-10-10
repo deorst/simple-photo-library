@@ -4,6 +4,7 @@
 from os.path import splitext
 from Photo import Photo                                                                     
 from shutil import copyfile, rmtree
+import sys
 
 import os
 
@@ -37,6 +38,8 @@ class Library(object):
         uid = 0
         self.libraryset = {}
 
+        sys.stdout.write('Reading files...')
+
         # traverse directory structure 
         for dummy_dirpath, dummy_dirname, dummy_filename in os.walk(self.src_path):
             # dummy_filename - is a list of names of files in a directory dummy_dirname.
@@ -51,11 +54,15 @@ class Library(object):
                                    '.m4v', '.MOV', '.mp4']:
                         self.libraryset[uid].unrecognized = True
                     uid += 1
+        sys.stdout.flush()
+        sys.stdout.write('\tDone!\n')
 
     def make_new_dir(self):
         """
         Create new directories for sorted photos in a dst_dir.
         """
+
+        sys.stdout.write('Create directories...')
         
         # create 'dst_dir/albums' folder just in case.
         # It's a root for a library.
@@ -81,8 +88,15 @@ class Library(object):
                 if day not in os.listdir('{path}/albums/{year}/{month}'.format(path=self.dst_path, year=year, month=month)):
                     os.mkdir('{path}/albums/{year}/{month}/{day}'.format(path=self.dst_path, year=year, month=month, day=day))
 
+        sys.stdout.write('\tDone!\n')
+
     def copy_src_to_dst(self):
         """ copy all photos from src_dir to dst_dir """
+
+        sys.stdout.write('Moving files...\n')
+
+        len_libraryset = float(len(self.libraryset))
+
         # copy all photos to dst_dir/albums/YYYY/MM/DD based on file's modified date
         for number, dummy_photo in enumerate(self.libraryset.values()):
             year = dummy_photo.get_datetime()[:4]
@@ -119,5 +133,28 @@ class Library(object):
             if self.delete_old:
                 os.remove('{old_dir}/{name}'.format(old_dir=old_dir, name=name))
 
+            self.update_progress((number+1) / len_libraryset)
+
         if self.delete_old and not os.listdir(old_dir):
             rmtree(old_dir)
+
+    @staticmethod
+    def update_progress(progress):
+
+        bar_length = 40
+        status = ""
+        if isinstance(progress, int):
+            progress = float(progress)
+        if not isinstance(progress, float):
+            progress = 0
+            status = "ERROR: progress var must be float\r\n"
+        if progress < 0:
+            progress = 0
+            status = "Halt...\r\n"
+        if progress >= 1:
+            progress = 1
+            status = "Done!\r\n"
+        block = int(round(bar_length * progress))
+        text = "\rProgress: [{0}] {1}% {2}".format("#" * block + "-" * (bar_length - block), int(progress * 100), status)
+        sys.stdout.write(text)
+        sys.stdout.flush()
