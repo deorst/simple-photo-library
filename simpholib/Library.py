@@ -12,8 +12,8 @@ import os
 class Library(object):
 
     def __init__(self, source_path, destination_path, libraryset=None):
-        self.src_path = source_path
-        self.dst_path = destination_path
+        self.src_path = source_path.rstrip('/')
+        self.dst_path = destination_path.rstrip('/')
         self.libraryset = libraryset
         if self.src_path == self.dst_path:
             self.delete_old = True
@@ -44,7 +44,7 @@ class Library(object):
         # traverse directory structure 
         for dummy_dirpath, dummy_dirname, dummy_filename in os.walk(self.src_path):
             # dummy_filename - is a list of names of files in a directory dummy_dirname.
-            if dummy_filename:                                                              
+            if dummy_filename:
                 for dummy_name in dummy_filename:
                     self.libraryset[uid] = Photo(dummy_dirpath, dummy_name, uid)
                     self.libraryset[uid].get_datetime_from_file()
@@ -59,6 +59,9 @@ class Library(object):
             if not dummy_dirname:
                 if not dummy_dirpath == self.src_path:
                     self.folders_to_delete.add(dummy_dirpath)
+            else:
+                for dirname in dummy_dirname:
+                    self.folders_to_delete.add('{path}/{dirname}'.format(path=dummy_dirpath, dirname=dirname))
 
         sys.stdout.flush()
         sys.stdout.write('\tDone!\n')
@@ -136,14 +139,16 @@ class Library(object):
                         ),
                     )
                 )
+
+            # Delete old files.
             if self.delete_old:
                 os.remove('{old_dir}/{name}'.format(old_dir=old_dir, name=name))
 
             self.update_progress((number+1) / len_libraryset)
 
-        if self.delete_old:
-            if not old_dir == self.src_path:
-                self.folders_to_delete.add(old_dir)
+            if self.delete_old:
+                if not old_dir == self.src_path:
+                    self.folders_to_delete.add(old_dir)
 
     def delete_old_folders(self):
         if self.src_path in self.folders_to_delete:
