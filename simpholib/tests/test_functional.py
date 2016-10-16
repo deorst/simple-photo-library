@@ -463,3 +463,254 @@ class FunctionalityTest(TestCase):
                                                                                 month='06',
                                                                                 day='14')), ['2012-06-14_0.jpg',
                                                                                              '2012-06-14_1.jpg'])
+
+    def test_two_files_in_a_folder(self):
+        """
+        2.5. Two files in a folder.
+            2.5.1. Create an empty folder.
+            2.5.2. Create an image file in a folder.
+            2.5.3. Check that image file is created.
+            2.5.4. Set 'modified time' for that image file.
+            2.5.5. Run 'simpholib'.
+            2.5.6. Check new folder structure.
+        """
+
+        # 2.5.1. Create an empty folder.
+        os.mkdir('{path}/folder'.format(path=self.dst_path))
+
+        # 2.5.2. Create two image files in a folder.
+        picture = open('{path}/folder/1.jpg'.format(path=self.dst_path), 'w')
+        picture.close()
+
+        picture = open('{path}/folder/2.jpg'.format(path=self.dst_path), 'w')
+        picture.close()
+
+        # 2.5.3. Check that image files and folder are created.
+        self.assertEqual(os.listdir(self.dst_path), ['folder'])
+        self.assertEqual(os.listdir('{path}/folder'.format(path=self.dst_path)), ['1.jpg', '2.jpg'])
+
+        # 2.5.4. Set 'modified time' for image files.
+        modified_time = time.mktime(datetime.datetime(2012, 06, 14, 12, 00).timetuple())
+        os.utime('{path}/folder/1.jpg'.format(path=self.dst_path), (modified_time, modified_time))
+        os.utime('{path}/folder/2.jpg'.format(path=self.dst_path), (modified_time, modified_time))
+
+        # 2.5.5. Run 'simpholib'.
+        os.system('simpho ./{dst_path}/'.format(dst_path=self.dst_path))
+
+        # 2.5.6. Check new folder structure.
+        self.assertEqual(os.listdir(self.dst_path), ['albums'])
+        self.assertEqual(os.listdir('{path}/albums'.format(path=self.dst_path)), ['2012'])
+        self.assertEqual(os.listdir('{path}/albums/{year}'.format(path=self.dst_path, year='2012')), ['06'])
+        self.assertEqual(os.listdir('{path}/albums/{year}/{month}'.format(path=self.dst_path,
+                                                                          year='2012',
+                                                                          month='06')), ['14'])
+        self.assertEqual(os.listdir('{path}/albums/{year}/{month}/{day}'.format(path=self.dst_path,
+                                                                                year='2012',
+                                                                                month='06',
+                                                                                day='14')), ['2012-06-14_0.jpg',
+                                                                                             '2012-06-14_1.jpg'])
+
+    def test_two_files_in_a_folder_in_a_folder(self):
+        """
+        2.6. Single file in a folder in a folder.
+            2.6.1. Create an empty folder in a folder.
+            2.6.2. Check that folders are created.
+            2.6.3. Create an image file in a folder.
+            2.6.4. Check that image file is created.
+            2.6.5. Set 'modified time' for that image file.
+            2.6.6. Run 'simpholib'.
+            2.6.7. Check new folder structure.
+        """
+
+        # 2.6.1. Create an empty folder in a folder.
+        os.mkdir('{path}/folder_1/'.format(path=self.dst_path))
+        os.mkdir('{path}/folder_1/folder_2/'.format(path=self.dst_path))
+
+        # 2.6.2. Check that folders are created.
+        self.assertEqual(os.listdir('{path}/'.format(path=self.dst_path)), ['folder_1'])
+        self.assertEqual(os.listdir('{path}/folder_1/'.format(path=self.dst_path)), ['folder_2'])
+
+        # 2.6.3. Create an two image files in a folder.
+        picture = open('{path}/folder_1/folder_2/1.jpg'.format(path=self.dst_path), 'w')
+        picture.close()
+
+        picture = open('{path}/folder_1/folder_2/2.jpg'.format(path=self.dst_path), 'w')
+        picture.close()
+
+        # 2.6.4. Check that image file is created.
+        self.assertEqual(os.listdir('{path}/folder_1/folder_2/'.format(path=self.dst_path)), ['1.jpg', '2.jpg'])
+
+        # 2.6.5. Set 'modified time' for that image file.
+        modified_time = time.mktime(datetime.datetime(2012, 06, 14, 12, 00).timetuple())
+        os.utime('{path}/folder_1/folder_2/1.jpg'.format(path=self.dst_path), (modified_time, modified_time))
+        os.utime('{path}/folder_1/folder_2/2.jpg'.format(path=self.dst_path), (modified_time, modified_time))
+
+        # 2.6.6. Run 'simpholib'.
+        os.system('simpho ./{dst_path}/'.format(dst_path=self.dst_path))
+
+        # 1.5.7. Check new folder structure.
+        self.assertEqual(os.listdir(self.dst_path), ['albums'])
+        self.assertEqual(os.listdir('{path}/albums'.format(path=self.dst_path)), ['2012'])
+        self.assertEqual(os.listdir('{path}/albums/{year}'.format(path=self.dst_path, year='2012')), ['06'])
+        self.assertEqual(os.listdir('{path}/albums/{year}/{month}'.format(path=self.dst_path,
+                                                                          year='2012',
+                                                                          month='06')), ['14'])
+        self.assertEqual(os.listdir('{path}/albums/{year}/{month}/{day}'.format(path=self.dst_path,
+                                                                                year='2012',
+                                                                                month='06',
+                                                                                day='14')), ['2012-06-14_0.jpg',
+                                                                                             '2012-06-14_1.jpg'])
+
+    def test_a_file_and_a_file_in_a_folder(self):
+        """
+        2.7. A file and a file in a folder.
+            2.7.1. Create an empty folder.
+            2.7.2. Check that folder is created.
+            2.7.3. Create an image file and and image file in a folder.
+            2.7.4. Check that image files are created.
+            2.7.5. Set 'modified time' for image file.
+            2.7.6. Run 'simpholib'.
+            2.7.7. Check new folder structure.
+        """
+
+        # 2.7.1. Create an empty folder.
+        os.mkdir('{path}/folder'.format(path=self.dst_path))
+
+        # 2.7.2. Check that folder is created.
+        self.assertEqual(os.listdir(self.dst_path), ['folder'])
+
+        # 2.7.3. Create two image files in a folder.
+        picture = open('{path}/1.jpg'.format(path=self.dst_path), 'w')
+        picture.close()
+
+        picture = open('{path}/folder/2.jpg'.format(path=self.dst_path), 'w')
+        picture.close()
+
+        # 2.7.4. Check that image files and folder are created.
+        self.assertEqual(os.listdir('{path}/'.format(path=self.dst_path)), ['1.jpg', 'folder'])
+        self.assertEqual(os.listdir('{path}/folder'.format(path=self.dst_path)), ['2.jpg'])
+
+        # 2.7.5. Set 'modified time' for image files.
+        modified_time = time.mktime(datetime.datetime(2012, 06, 14, 12, 00).timetuple())
+        os.utime('{path}/1.jpg'.format(path=self.dst_path), (modified_time, modified_time))
+        os.utime('{path}/folder/2.jpg'.format(path=self.dst_path), (modified_time, modified_time))
+
+        # 2.7.6. Run 'simpholib'.
+        os.system('simpho ./{dst_path}/'.format(dst_path=self.dst_path))
+
+        # 2.7.7. Check new folder structure.
+        self.assertEqual(os.listdir(self.dst_path), ['albums'])
+        self.assertEqual(os.listdir('{path}/albums'.format(path=self.dst_path)), ['2012'])
+        self.assertEqual(os.listdir('{path}/albums/{year}'.format(path=self.dst_path, year='2012')), ['06'])
+        self.assertEqual(os.listdir('{path}/albums/{year}/{month}'.format(path=self.dst_path,
+                                                                          year='2012',
+                                                                          month='06')), ['14'])
+        self.assertEqual(os.listdir('{path}/albums/{year}/{month}/{day}'.format(path=self.dst_path,
+                                                                                year='2012',
+                                                                                month='06',
+                                                                                day='14')), ['2012-06-14_0.jpg',
+                                                                                             '2012-06-14_1.jpg'])
+
+    def test_a_file_in_a_foler_and_a_file_in_a_folder_in_a_folder(self):
+        """
+        2.8. A file in a folder and a file in a folder in a folder.
+            2.8.1. Create an empty folder in a folder.
+            2.8.2. Check that folder is created.
+            2.8.3. Create an image file and and image file in a folder.
+            2.8.4. Check that image files are created.
+            2.8.5. Set 'modified time' for image file.
+            2.8.6. Run 'simpholib'.
+            2.8.7. Check new folder structure.
+        """
+
+        # 2.8.1. Create an empty folder.
+        os.mkdir('{path}/folder_1'.format(path=self.dst_path))
+        os.mkdir('{path}/folder_1/folder_2'.format(path=self.dst_path))
+
+        # 2.8.2. Check that folder is created.
+        self.assertEqual(os.listdir(self.dst_path), ['folder_1'])
+        self.assertEqual(os.listdir('{path}/folder_1'.format(path=self.dst_path)), ['folder_2'])
+
+        # 2.8.3. Create an image file in a folder and another in a folder in a folder.
+        picture = open('{path}/folder_1/1.jpg'.format(path=self.dst_path), 'w')
+        picture.close()
+
+        picture = open('{path}/folder_1/folder_2/2.jpg'.format(path=self.dst_path), 'w')
+        picture.close()
+
+        # 2.8.4. Check that image files and folder are created.
+        self.assertEqual(os.listdir('{path}/folder_1'.format(path=self.dst_path)), ['1.jpg', 'folder_2'])
+        self.assertEqual(os.listdir('{path}/folder_1/folder_2'.format(path=self.dst_path)), ['2.jpg'])
+
+        # 2.8.5. Set 'modified time' for image files.
+        modified_time = time.mktime(datetime.datetime(2012, 06, 14, 12, 00).timetuple())
+        os.utime('{path}/folder_1/1.jpg'.format(path=self.dst_path), (modified_time, modified_time))
+        os.utime('{path}/folder_1/folder_2/2.jpg'.format(path=self.dst_path), (modified_time, modified_time))
+
+        # 2.8.6. Run 'simpholib'.
+        os.system('simpho ./{dst_path}/'.format(dst_path=self.dst_path))
+
+        # 2.8.7. Check new folder structure.
+        self.assertEqual(os.listdir(self.dst_path), ['albums'])
+        self.assertEqual(os.listdir('{path}/albums'.format(path=self.dst_path)), ['2012'])
+        self.assertEqual(os.listdir('{path}/albums/{year}'.format(path=self.dst_path, year='2012')), ['06'])
+        self.assertEqual(os.listdir('{path}/albums/{year}/{month}'.format(path=self.dst_path,
+                                                                          year='2012',
+                                                                          month='06')), ['14'])
+        self.assertEqual(os.listdir('{path}/albums/{year}/{month}/{day}'.format(path=self.dst_path,
+                                                                                year='2012',
+                                                                                month='06',
+                                                                                day='14')), ['2012-06-14_0.jpg',
+                                                                                             '2012-06-14_1.jpg'])
+
+    def test_a_file_and_a_file_in_a_folder_in_a_folder(self):
+        """
+        2.9. A file and a file in a folder in a folder.
+            2.9.1. Create an empty folder in a folder.
+            2.9.2. Check that folder is created.
+            2.9.3. Create an image file and and image file in a folder.
+            2.9.4. Check that image files are created.
+            2.9.5. Set 'modified time' for image file.
+            2.9.6. Run 'simpholib'.
+            2.9.7. Check new folder structure.
+        """
+
+        # 2.9.1. Create an empty folder.
+        os.mkdir('{path}/folder_1'.format(path=self.dst_path))
+        os.mkdir('{path}/folder_1/folder_2'.format(path=self.dst_path))
+
+        # 2.9.2. Check that folder is created.
+        self.assertEqual(os.listdir(self.dst_path), ['folder_1'])
+        self.assertEqual(os.listdir('{path}/folder_1'.format(path=self.dst_path)), ['folder_2'])
+
+        # 2.9.3. Create an image file in a folder and another in a folder in a folder.
+        picture = open('{path}/1.jpg'.format(path=self.dst_path), 'w')
+        picture.close()
+
+        picture = open('{path}/folder_1/folder_2/2.jpg'.format(path=self.dst_path), 'w')
+        picture.close()
+
+        # 2.9.4. Check that image files and folder are created.
+        self.assertEqual(os.listdir('{path}/'.format(path=self.dst_path)), ['1.jpg', 'folder_1'])
+        self.assertEqual(os.listdir('{path}/folder_1/folder_2'.format(path=self.dst_path)), ['2.jpg'])
+
+        # 2.9.5. Set 'modified time' for image files.
+        modified_time = time.mktime(datetime.datetime(2012, 06, 14, 12, 00).timetuple())
+        os.utime('{path}/1.jpg'.format(path=self.dst_path), (modified_time, modified_time))
+        os.utime('{path}/folder_1/folder_2/2.jpg'.format(path=self.dst_path), (modified_time, modified_time))
+
+        # 2.9.6. Run 'simpholib'.
+        os.system('simpho ./{dst_path}/'.format(dst_path=self.dst_path))
+
+        # 2.9.7. Check new folder structure.
+        self.assertEqual(os.listdir(self.dst_path), ['albums'])
+        self.assertEqual(os.listdir('{path}/albums'.format(path=self.dst_path)), ['2012'])
+        self.assertEqual(os.listdir('{path}/albums/{year}'.format(path=self.dst_path, year='2012')), ['06'])
+        self.assertEqual(os.listdir('{path}/albums/{year}/{month}'.format(path=self.dst_path,
+                                                                          year='2012',
+                                                                          month='06')), ['14'])
+        self.assertEqual(os.listdir('{path}/albums/{year}/{month}/{day}'.format(path=self.dst_path,
+                                                                                year='2012',
+                                                                                month='06',
+                                                                                day='14')), ['2012-06-14_0.jpg',
+                                                                                             '2012-06-14_1.jpg'])
