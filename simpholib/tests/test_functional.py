@@ -78,7 +78,8 @@ class FunctionalityTest(TestCase):
         picture.close()
 
         # 1.1.2. Check that image file is created.
-        self.assertEqual(os.listdir(self.dst_path), ['1.jpg'])
+        self.assertEqual(len(os.listdir(self.dst_path)), 1)
+        self.assertIn('1.jpg', os.listdir(self.dst_path))
 
         # 1.1.3. Set 'modified time' for that image file.
         modified_time = time.mktime(datetime.datetime(2012, 06, 14, 12, 00).timetuple())
@@ -88,16 +89,30 @@ class FunctionalityTest(TestCase):
         os.system('simpho ./{dst_path}/'.format(dst_path=self.dst_path))
 
         # 1.1.5. Check new folder structure.
-        self.assertEqual(os.listdir(self.dst_path), ['albums'])
-        self.assertEqual(os.listdir('{path}/albums'.format(path=self.dst_path)), ['2012'])
-        self.assertEqual(os.listdir('{path}/albums/{year}'.format(path=self.dst_path, year='2012')), ['06'])
-        self.assertEqual(os.listdir('{path}/albums/{year}/{month}'.format(path=self.dst_path,
-                                                                          year='2012',
-                                                                          month='06')), ['14'])
-        self.assertEqual(os.listdir('{path}/albums/{year}/{month}/{day}'.format(path=self.dst_path,
-                                                                                year='2012',
-                                                                                month='06',
-                                                                                day='14')), ['2012-06-14_0.jpg'])
+        self.assertEqual(len(os.listdir(self.dst_path)), 1)
+        self.assertIn('albums', os.listdir(self.dst_path))
+
+        self.assertEqual(len(os.listdir('{path}/albums'.format(path=self.dst_path))), 1)
+        self.assertIn('2012', os.listdir('{path}/albums'.format(path=self.dst_path)))
+
+        self.assertEqual(len(os.listdir('{path}/albums/{year}'.format(path=self.dst_path, year='2012'))), 1)
+        self.assertIn('06', os.listdir('{path}/albums/{year}'.format(path=self.dst_path, year='2012')))
+
+        self.assertEqual(len(os.listdir('{path}/albums/{year}/{month}'.format(path=self.dst_path,
+                                                                              year='2012',
+                                                                              month='06'))), 1)
+        self.assertIn('14', os.listdir('{path}/albums/{year}/{month}'.format(path=self.dst_path,
+                                                                             year='2012',
+                                                                             month='06')))
+
+        self.assertEqual(len(os.listdir('{path}/albums/{year}/{month}/{day}'.format(path=self.dst_path,
+                                                                                    year='2012',
+                                                                                    month='06',
+                                                                                    day='14'))), 1)
+        self.assertIn('2012-06-14_0.jpg', os.listdir('{path}/albums/{year}/{month}/{day}'.format(path=self.dst_path,
+                                                                                                 year='2012',
+                                                                                                 month='06',
+                                                                                                 day='14')))
 
     def test_single_file_and_an_empty_folder(self):
         """
