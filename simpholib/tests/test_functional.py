@@ -39,6 +39,9 @@ class FunctionalityTest(TestCase):
         os.mkdir('simpholib/tests/files_for_tests')
         os.mkdir('simpholib/tests/files_for_tests/src')
         os.mkdir('simpholib/tests/files_for_tests/dst')
+
+        # Install library.
+        os.system('pip install simpholib')
         super(FunctionalityTest, cls).setUpClass()
 
     @classmethod
