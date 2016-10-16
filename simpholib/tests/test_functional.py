@@ -33,6 +33,20 @@ class FunctionalityTest(TestCase):
         self.dst_path = 'simpholib/tests/files_for_tests/dst'
         super(FunctionalityTest, self).__init__(*args, **kwargs)
 
+    @classmethod
+    def setUpClass(cls):
+        # Create dirs for testing.
+        os.mkdir('simpholib/tests/files_for_tests')
+        os.mkdir('simpholib/tests/files_for_tests/src')
+        os.mkdir('simpholib/tests/files_for_tests/dst')
+        super(FunctionalityTest, cls).setUpClass()
+
+    @classmethod
+    def tearDownClass(cls):
+        # Remove dirs for testing.
+        rmtree('simpholib/tests/files_for_tests')
+        super(FunctionalityTest, cls).tearDownClass()
+
     def setUp(self):
         # Check that ./files_for_tests is empty.
         self.assertFalse(glob.glob('{path}/*'.format(path=self.dst_path)))
