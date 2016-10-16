@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='simpholib',
-      version='0.1',
+      version='1.0.b1',
       description='Simple Photo Library',
       long_description='Tool for ordering unsorted photos and arrange them in a directories by dates.',
       url='https://github.com/dstdnk/simple-photo-library',
