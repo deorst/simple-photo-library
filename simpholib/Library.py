@@ -52,7 +52,7 @@ class Library(object):
                     ext = splitext(dummy_name)[1]
                     if ext not in ['.jpg', '.jpeg', '.JPG', '.JPEG',
                                    '.png', '.PNG', '.gif', '.GIF',
-                                   '.m4v', '.MOV', '.mp4']:
+                                   '.m4v', '.mov', '.MOV', '.mp4']:
                         self.libraryset[uid].unrecognized = True
                     uid += 1
 
@@ -151,11 +151,12 @@ class Library(object):
                     self.folders_to_delete.add(old_dir)
 
     def delete_old_folders(self):
-        if self.src_path in self.folders_to_delete:
-            raise Exception
-        else:
-            for fol in self.folders_to_delete:
-                rmtree(fol)
+        if self.delete_old:
+            if self.src_path in self.folders_to_delete:
+                raise Exception
+            else:
+                for fol in self.folders_to_delete:
+                    rmtree(fol)
 
     @staticmethod
     def update_progress(progress):
